@@ -8,5 +8,8 @@ public class Player {
 	public Player(SpacePosition position) {
 		this.position = position;
 	}
-
+	
+	public SpacePosition getPosition(){
+		return position;
+	}
 }
