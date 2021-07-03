@@ -1,6 +1,4 @@
-package gametheorysimulator.space;
-
-import gametheorysimulator.space.position.SpacePosition;
+package gametheorysimulator.space.position;
 
 public class Grid2DPosition implements SpacePosition {
 	private int x, y;
@@ -10,4 +8,10 @@ public class Grid2DPosition implements SpacePosition {
 		this.y = y;
 	}
 
+	@Override
+	public int[] getPosition() {
+		int[] position = {x, y};
+		return position;
+	}
+	
 }
