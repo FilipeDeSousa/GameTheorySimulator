@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import gametheorysimulator.game.Game;
 import gametheorysimulator.players.Player;
 import gametheorysimulator.space.position.Grid2DPosition;
 import gametheorysimulator.space.position.SpacePosition;
@@ -13,7 +14,6 @@ public class Grid2D implements GameSpace {
 		GRID_2D
 	}
 
-	
 	private int length, width;
 	private List<Player> population;
 	private Player[][] grid;
@@ -27,7 +27,9 @@ public class Grid2D implements GameSpace {
 	}
 
 	@Override
-	public List<Player> populate(int n) {
+	public List<Player> populate(int n, Game game) {
+		game.setNumberPlayers(n);
+		Player.setSpace(this);
 		int capability = length*width;
 		if(n > capability){
 			System.out.println(n+" exceeds space capability of "+capability+". Population set to "+capability);
@@ -58,7 +60,7 @@ public class Grid2D implements GameSpace {
 		for(Player[] row: grid){
 			for(Player cell: row)
 				if(cell != null)
-					System.out.print(cell.getId()+" ");
+					System.out.print(Integer.toHexString(cell.getId())+" ");
 				else
 					System.out.print("· ");
 			System.out.println();
@@ -85,7 +87,9 @@ public class Grid2D implements GameSpace {
 							continue;
 						if(j>width-1)
 							break;
-						reachablePlayers.add(grid[i][j]);
+						Player player2 = grid[i][j];
+						if(player2 != null)
+							reachablePlayers.add(player2);
 					}
 				}
 				break;

@@ -3,6 +3,7 @@ package gametheorysimulator.space;
 import java.util.ArrayList;
 import java.util.List;
 
+import gametheorysimulator.game.Game;
 import gametheorysimulator.players.Player;
 
 public class Grid3D implements GameSpace {
@@ -16,11 +17,23 @@ public class Grid3D implements GameSpace {
 	}
 	
 	@Override
-	public List<Player> populate(int n) {
+	public List<Player> populate(int n, Game game) {
 		
 		
 		ArrayList<Player> population = new ArrayList<Player>();
 		return population;
+	}
+
+	@Override
+	public List<Player> reachablePlayers(Player player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setReach(Reach reach) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
