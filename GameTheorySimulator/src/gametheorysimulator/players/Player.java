@@ -1,15 +1,15 @@
 package gametheorysimulator.players;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 import gametheorysimulator.game.Game;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.position.SpacePosition;
+import gametheorysimulator.strategy.CooperativeBehaviour;
 import gametheorysimulator.strategy.GameStrategy;
 import gametheorysimulator.strategy.RandomBehaviour;
+import gametheorysimulator.strategy.TitForTat;
 
 public class Player {
 	//Static
@@ -22,7 +22,7 @@ public class Player {
 	private GameStrategy strategy;
 	private List<Player> reachablePlayers;
 	//Last turn info
-	private Map<Player, Boolean> decisions = new HashMap<Player, Boolean>();
+	private boolean decision;
 	private double payoff;
 	//Control flag
 	private boolean hasDecided = false;
@@ -43,34 +43,37 @@ public class Player {
 	}
 	
 	//Non-static
-	private int generateId() {
-		int id = numberPlayers;
-		++numberPlayers;
-		return id;
-	}
-
-	public SpacePosition getPosition(){
-		return position;
-	}
-
+	//Getters
 	public int getId() {
 		return id;
 	}
 
 	public String getLastIterationInfo() {
-		String decisions = "";
-		String cooperatesWith = "";
-		String defectsWith = "";
-		for(Map.Entry<Player, Boolean> decision: this.decisions.entrySet())
-			if(decision.getValue())
-				cooperatesWith += " "+Integer.toHexString(decision.getKey().id)+";";
-			else
-				defectsWith += " "+Integer.toHexString(decision.getKey().id)+";";
-		if(cooperatesWith.length() > 0)
-			decisions += "Cooperates:"+cooperatesWith;
-		if(defectsWith.length() > 0)
-			decisions += "Defects:"+defectsWith;
-		return "Player: "+id+"; "+decisions+" Payoff: "+payoff;
+		String decision = "";
+		if(this.decision)
+			decision = "Cooperates";
+		else
+			decision = "Defects";
+		return "Player: "+id+"; "+decision+"; Payoff: "+payoff;
+	}
+	
+	public SpacePosition getPosition(){
+		return position;
+	}
+	
+	public List<Player> getReachablePlayers() {
+		return reachablePlayers;
+	}
+	
+	public Player getRandomReachablePlayer() {
+		return reachablePlayers.get((new Random()).nextInt(reachablePlayers.size()));
+	}
+
+	//Others
+	private int generateId() {
+		int id = numberPlayers;
+		++numberPlayers;
+		return id;
 	}
 
 	public void decide() {
@@ -79,8 +82,7 @@ public class Player {
 			System.exit(0);
 		}
 		reachablePlayers = space.reachablePlayers(this);
-		for(Player player: reachablePlayers)
-			decisions.put(player, strategy.decide(player));
+		decision = strategy.decide();
 	}
 	
 	public double computePayoff() {
@@ -93,6 +95,12 @@ public class Player {
 			case "Random":
 				this.strategy = new RandomBehaviour();
 				return this.strategy;
+			case "Cooperative":
+				this.strategy = new CooperativeBehaviour();
+				return this.strategy;
+			case "TitForTat":
+				this.strategy = new TitForTat(this);
+				return this.strategy;
 			default:
 				System.out.println("ERROR: Strategy "+strategy+" unknown.");
 				System.exit(0);
@@ -100,23 +108,15 @@ public class Player {
 		return null;
 	}
 
-	public List<Player> getReachablePlayers() {
-		return reachablePlayers;
-	}
-
-	public boolean getDecision(Player player) {
-		return decisions.get(player);
-	}
-
-	public Map<Player, Boolean> getDecisions(boolean cooperates) {
-		Map<Player, Boolean> result = new HashMap<Player, Boolean>();
-		for(Map.Entry<Player, Boolean> decision: decisions.entrySet())
-			if(decision.getValue() == cooperates)
-				result.put(decision.getKey(), decision.getValue());
-		return result;
+	public boolean getDecision() {
+		return decision;
 	}
 
 	public double getPayoff() {
 		return payoff;
+	}
+
+	public GameSpace getSpace(){
+		return space;
 	}
 }

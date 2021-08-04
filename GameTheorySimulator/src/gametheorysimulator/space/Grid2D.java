@@ -4,16 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import gametheorysimulator.game.Game;
 import gametheorysimulator.players.Player;
 import gametheorysimulator.space.position.Grid2DPosition;
 import gametheorysimulator.space.position.SpacePosition;
 
 public class Grid2D implements GameSpace {
-	enum SpaceOptions {
-		GRID_2D
-	}
-
 	private int length, width;
 	private List<Player> population;
 	private Player[][] grid;
@@ -27,8 +22,7 @@ public class Grid2D implements GameSpace {
 	}
 
 	@Override
-	public List<Player> populate(int n, Game game) {
-		game.setNumberPlayers(n);
+	public List<Player> populate(int n) {
 		Player.setSpace(this);
 		int capability = length*width;
 		if(n > capability){
@@ -101,6 +95,13 @@ public class Grid2D implements GameSpace {
 		return reachablePlayers;
 	}
 
+	//Getters
+	@Override
+	public Reach getReach() {
+		return reach;
+	}
+	
+	//Setters
 	@Override
 	public void setReach(Reach reach) {
 		this.reach = reach;

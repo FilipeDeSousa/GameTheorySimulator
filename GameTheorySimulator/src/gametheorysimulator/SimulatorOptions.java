@@ -7,6 +7,7 @@ import gametheorysimulator.game.Game;
 import gametheorysimulator.game.PGG;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.Grid2D;
+import gametheorysimulator.space.SharedMedium;
 
 class SimulatorOptions {
 	enum SpaceOptions {
@@ -17,6 +18,7 @@ class SimulatorOptions {
 	private GameSpace space;
 	private Game game;
 	private Map<String, Integer> strategies = new HashMap<String, Integer>();
+	private Map<String, Double> parameters = new HashMap<String, Double>();
 	private int iterations = 100;//100 per default
 	private GameSpace.Reach reach;
 	
@@ -32,6 +34,10 @@ class SimulatorOptions {
 						case "Grid2D":
 							String[] dimensions = args[i+2].split(";");
 							space = new Grid2D(Integer.parseInt(dimensions[0]), Integer.parseInt(dimensions[1]));
+							break;
+						case "SharedMedium":
+							space = new SharedMedium();
+							break;
 					}
 					i++;
 					break;
@@ -51,16 +57,25 @@ class SimulatorOptions {
 					break;
 				case "-iterations":
 					iterations = Integer.parseInt(args[i+1]);
+					break;
 				case "-strategies":
 					String[] strategiesArray = args[i+1].split(";");
 					for(int j=0; j<strategiesArray.length; j+=2)
 						strategies.put(strategiesArray[j], Integer.parseInt(strategiesArray[j+1]));
+					break;
+				case "-parameters":
+					String[] parametersArray = args[i+1].split(";");
+					for(int j=0; j<parametersArray.length; j+=2)
+						parameters.put(parametersArray[j], Double.parseDouble(parametersArray[j+1]));
+					break;
 			}
 		setup();
 	}
 
 	private void setup() {
 		space.setReach(reach);
+		for(Map.Entry<String, Double> param: parameters.entrySet())
+			game.setParameter(param.getKey(), param.getValue());
 	}
 
 	public GameSpace getSpace() {
