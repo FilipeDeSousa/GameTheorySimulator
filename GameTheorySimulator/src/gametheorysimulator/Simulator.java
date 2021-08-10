@@ -3,6 +3,7 @@ package gametheorysimulator;
 import java.util.List;
 import java.util.Map;
 
+import gametheorysimulator.file.OutputFileInfo;
 import gametheorysimulator.players.Player;
 import gametheorysimulator.space.GameSpace;
 
@@ -10,12 +11,16 @@ public class Simulator {
 	private static SimulatorOptions options;
 	private static GameSpace space;
 	private static List<Player> players;
+	private static OutputFileInfo out = OutputFileInfo.getInstance();
 	
 	public static void main(String[] args) {
+		//Initial setups
 		options = new SimulatorOptions(args);
 		space = options.getSpace();
 		players = space.populate(options.getNumberPlayers());
 		setPlayersStrategies();
+		
+		//Run iterations
 		for(int i=0; i<options.getIterations(); i++) {
 			for(Player player: players)
 				player.decide();
@@ -23,7 +28,11 @@ public class Simulator {
 				player.computePayoff();
 			System.out.println("Iteration "+(i+1)+" :");
 			printInfo();
+			out.printIteration(players);
 		}
+		
+		//Last instructions
+		out.close();
 	}
 
 	private static void setPlayersStrategies() {

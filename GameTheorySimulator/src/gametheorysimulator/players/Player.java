@@ -7,6 +7,7 @@ import gametheorysimulator.game.Game;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.position.SpacePosition;
 import gametheorysimulator.strategy.CooperativeBehaviour;
+import gametheorysimulator.strategy.ForgivingTitForTat;
 import gametheorysimulator.strategy.GameStrategy;
 import gametheorysimulator.strategy.RandomBehaviour;
 import gametheorysimulator.strategy.TitForTat;
@@ -100,6 +101,9 @@ public class Player {
 				return this.strategy;
 			case "TitForTat":
 				this.strategy = new TitForTat(this);
+				return this.strategy;
+			case "ForgivingTitForTat":
+				this.strategy = new ForgivingTitForTat(this);
 				return this.strategy;
 			default:
 				System.out.println("ERROR: Strategy "+strategy+" unknown.");

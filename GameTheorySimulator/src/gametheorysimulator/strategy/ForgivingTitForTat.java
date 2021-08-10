@@ -4,17 +4,15 @@ import java.util.List;
 
 import gametheorysimulator.players.Player;
 
-public class TitForTat implements GameStrategy {
-	Player self;
-	RandomBehaviour initialBehaviour;
-	boolean hasInteracted = false; //Has interacted in the previous one
+public class ForgivingTitForTat extends TitForTat {
+	RandomBehaviour forgivingBehaviour;
 	
 	//Constructor
-	public TitForTat(Player player){
-		self = player;
-		initialBehaviour = new RandomBehaviour();
+	public ForgivingTitForTat(Player player) {
+		super(player);
+		forgivingBehaviour = new RandomBehaviour();
 	}
-	
+
 	@Override
 	public boolean decide() {
 		List<Player> neighbours = self.getReachablePlayers();
@@ -32,7 +30,6 @@ public class TitForTat implements GameStrategy {
 			if(neighbour.getDecision())
 				return true;
 		
-		return false;
+		return forgivingBehaviour.decide();
 	}
-
 }
