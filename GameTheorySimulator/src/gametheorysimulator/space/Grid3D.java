@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import gametheorysimulator.players.Player;
-import gametheorysimulator.space.position.Grid2DPosition;
 import gametheorysimulator.space.position.Grid3DPosition;
 import gametheorysimulator.space.position.SpacePosition;
 
