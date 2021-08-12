@@ -37,7 +37,7 @@ public class OutputFileInfo extends OutputFile {
 	
 	private File file;
 	private Document document;
-	private int runNumber = 1;
+	private int iteration = 1;
 	private String path;
 	
 	//Constructor
@@ -92,7 +92,7 @@ public class OutputFileInfo extends OutputFile {
 	public void printIteration(List<Player> players) {
 		Node simulation = document.getFirstChild();
 		Element run = document.createElement("run");
-		run.setAttribute("number", runNumber+"");runNumber++;
+		run.setAttribute("iteration", iteration+"");iteration++;
 		int numberPlayers = players.size();
 		run.setAttribute("numberOfPlayers", numberPlayers+"");
 		double totalPayoff = 0;
@@ -175,11 +175,11 @@ public class OutputFileInfo extends OutputFile {
 	}
 
 	public Map<Double, Double> getMapValues(String keyName, String valueName) {
-		NodeList runs = document.getFirstChild().getChildNodes();
+		NodeList iterations = document.getFirstChild().getChildNodes();
 		Map<Double, Double> result = new HashMap<Double, Double>();
-		for(int i=0; i<runs.getLength(); i++) {
-			Node run = runs.item(i);
-			NamedNodeMap attributes = run.getAttributes();
+		for(int i=0; i<iterations.getLength(); i++) {
+			Node iteration = iterations.item(i);
+			NamedNodeMap attributes = iteration.getAttributes();
 			double key = Double.parseDouble(attributes.getNamedItem(keyName).getNodeValue());
 			double value = Double.parseDouble(attributes.getNamedItem(valueName).getNodeValue());
 			result.put(key, value);

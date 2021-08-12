@@ -5,7 +5,9 @@ import java.util.Map;
 
 import gametheorysimulator.file.OutputFileInfo;
 import gametheorysimulator.players.Player;
+import gametheorysimulator.space.DynamicGameSpace;
 import gametheorysimulator.space.GameSpace;
+import gametheorysimulator.space.Grid2D;
 
 public class Simulator {
 	private static SimulatorOptions options;
@@ -22,12 +24,19 @@ public class Simulator {
 		
 		//Run iterations
 		for(int i=0; i<options.getIterations(); i++) {
+			if(space.hasMovement())
+				for(Player player: players)
+					player.move();
+			for(Player player: players)
+				player.setReachablePlayers();
 			for(Player player: players)
 				player.decide();
 			for(Player player: players)
 				player.computePayoff();
 			System.out.println("Iteration "+(i+1)+" :");
-			printInfo();
+			if(DynamicGameSpace.class.isInstance(space) && Grid2D.class.isInstance(space))
+				((Grid2D) space).printGridOccupation();
+			//printInfo();
 			out.printIteration(players);
 		}
 		
@@ -57,7 +66,7 @@ public class Simulator {
 		}
 	}
 
-	private static void printInfo() {
+	/*private static void printInfo() {
 		double sum = 0;
 		int numberCooperators = 0, numberDefectors = 0;
 		for(Player player: players) {
@@ -69,6 +78,6 @@ public class Simulator {
 				numberDefectors++;
 		}
 		System.out.println("Payoff Sum = "+sum+"; Number of Cooperators = "+numberCooperators+"; Number of Defectors = "+numberDefectors);
-	}
+	}*/
 
 }

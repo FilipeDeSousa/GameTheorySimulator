@@ -1,6 +1,6 @@
 package gametheorysimulator.strategy;
 
-public class DefectBehaviour implements GameStrategy {
+public class EgoisticBehaviour implements GameStrategy {
 
 	@Override
 	public boolean decide() {

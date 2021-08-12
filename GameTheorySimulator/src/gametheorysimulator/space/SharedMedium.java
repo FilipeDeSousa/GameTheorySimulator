@@ -10,6 +10,7 @@ public class SharedMedium implements GameSpace {
 	private List<Player> population;
 	private Reach reach;
 	
+	//Non-Static
 	@Override
 	public List<Player> populate(int n) {
 		Player.setSpace(this);
@@ -29,6 +30,11 @@ public class SharedMedium implements GameSpace {
 		return population;
 	}
 
+	@Override
+	public boolean hasMovement() {
+		return false;
+	}
+	
 	//Getters
 	public Reach getReach() {
 		return reach;

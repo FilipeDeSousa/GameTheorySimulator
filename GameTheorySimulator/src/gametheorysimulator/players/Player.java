@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Random;
 
 import gametheorysimulator.game.Game;
+import gametheorysimulator.space.DynamicGameSpace;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.position.SpacePosition;
-import gametheorysimulator.strategy.CooperativeBehaviour;
+import gametheorysimulator.strategy.AltruisticBehaviour;
 import gametheorysimulator.strategy.ForgivingTitForTat;
 import gametheorysimulator.strategy.GameStrategy;
 import gametheorysimulator.strategy.RandomBehaviour;
+import gametheorysimulator.strategy.RationalBehaviour;
 import gametheorysimulator.strategy.TitForTat;
 
 public class Player {
@@ -44,6 +46,36 @@ public class Player {
 	}
 	
 	//Non-static
+	private int generateId() {
+		int id = numberPlayers;
+		++numberPlayers;
+		return id;
+	}
+
+	public void decide() {
+		if(hasDecided) {
+			System.out.println("ERROR: Player "+Integer.toHexString(id)+" was in compute payoff turn.");
+			System.exit(0);
+		}
+		decision = strategy.decide();
+	}
+	
+	public double computePayoff() {
+		payoff = game.computePayoff(this);
+		return payoff;
+	}
+	
+	public void move() {
+		DynamicGameSpace dynamicSpace = (DynamicGameSpace) space;
+		List<SpacePosition> possibleMoves = dynamicSpace.getPossibleMovePositions(position, 1);
+		int numberPossibleMoves = possibleMoves.size();
+		if(numberPossibleMoves<1)
+			return;
+		int[] oldCoordenates = position.getPosition();
+		position = possibleMoves.get((new Random()).nextInt(numberPossibleMoves));
+		((DynamicGameSpace)space).resetOccupation(this, oldCoordenates);
+	}
+	
 	//Getters
 	public int getId() {
 		return id;
@@ -70,48 +102,6 @@ public class Player {
 		return reachablePlayers.get((new Random()).nextInt(reachablePlayers.size()));
 	}
 
-	//Others
-	private int generateId() {
-		int id = numberPlayers;
-		++numberPlayers;
-		return id;
-	}
-
-	public void decide() {
-		if(hasDecided) {
-			System.out.println("ERROR: Player "+Integer.toHexString(id)+" was in compute payoff turn.");
-			System.exit(0);
-		}
-		reachablePlayers = space.reachablePlayers(this);
-		decision = strategy.decide();
-	}
-	
-	public double computePayoff() {
-		payoff = game.computePayoff(this);
-		return payoff;
-	}
-
-	public GameStrategy setStrategy(String strategy) {
-		switch(strategy) {
-			case "Random":
-				this.strategy = new RandomBehaviour();
-				return this.strategy;
-			case "Cooperative":
-				this.strategy = new CooperativeBehaviour();
-				return this.strategy;
-			case "TitForTat":
-				this.strategy = new TitForTat(this);
-				return this.strategy;
-			case "ForgivingTitForTat":
-				this.strategy = new ForgivingTitForTat(this);
-				return this.strategy;
-			default:
-				System.out.println("ERROR: Strategy "+strategy+" unknown.");
-				System.exit(0);
-		}
-		return null;
-	}
-
 	public boolean getDecision() {
 		return decision;
 	}
@@ -122,5 +112,34 @@ public class Player {
 
 	public GameSpace getSpace(){
 		return space;
+	}
+	
+	//Setters
+	public void setReachablePlayers() {
+		reachablePlayers = space.reachablePlayers(this);
+	}
+
+	public GameStrategy setStrategy(String strategy) {
+		switch(strategy) {
+			case "Random":
+				this.strategy = new RandomBehaviour();
+				return this.strategy;
+			case "Cooperative":
+				this.strategy = new AltruisticBehaviour();
+				return this.strategy;
+			case "TitForTat":
+				this.strategy = new TitForTat(this);
+				return this.strategy;
+			case "ForgivingTitForTat":
+				this.strategy = new ForgivingTitForTat(this);
+				return this.strategy;
+			case "RationalBehaviour":
+				this.strategy = new RationalBehaviour(this);
+				return this.strategy;
+			default:
+				System.out.println("ERROR: Strategy "+strategy+" unknown!");
+				System.exit(0);
+		}
+		return null;
 	}
 }

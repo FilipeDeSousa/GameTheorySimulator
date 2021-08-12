@@ -34,12 +34,12 @@ public class OutputFileGraphs extends OutputFile {
 	
 	//Non-Static
 	public void printGraphs() {
-		OutputGraph cooperationRatioGraph = new OutputGraph("Cooperation Ratio", "Run", "Cooperation Ratio");
-		Map<Double, Double> values = outputFileInfo.getMapValues("number", "cooperationRatio");
+		OutputGraph cooperationRatioGraph = new OutputGraph("Cooperation Ratio", "t", "Cooperation Ratio");
+		Map<Double, Double> values = outputFileInfo.getMapValues("iteration", "cooperationRatio");
 		cooperationRatioGraph.plotGraph(values, cooperationRatioFile);
 		
-		OutputGraph medianPayoffGraph = new OutputGraph("Median Payoff", "Run", "Median Payoff");
-		values = outputFileInfo.getMapValues("number", "medianPayoff");
+		OutputGraph medianPayoffGraph = new OutputGraph("Median Payoff", "t", "Median Payoff");
+		values = outputFileInfo.getMapValues("iteration", "medianPayoff");
 		medianPayoffGraph.plotGraph(values, medianPayoffFile);
 	}
 }

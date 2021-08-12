@@ -1,6 +1,6 @@
 package gametheorysimulator.strategy;
 
-public class CooperativeBehaviour implements GameStrategy {
+public class AltruisticBehaviour implements GameStrategy {
 
 	@Override
 	public boolean decide() {

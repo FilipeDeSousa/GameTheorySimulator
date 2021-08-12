@@ -9,6 +9,13 @@ public class Grid2DPosition implements SpacePosition {
 		this.y = y;
 	}
 
+	//Non-Static
+	@Override
+	public String toString() {
+		return "("+x+", "+y+")";
+	}
+	
+	//Getters
 	@Override
 	public int[] getPosition() {
 		int[] position = {x, y};

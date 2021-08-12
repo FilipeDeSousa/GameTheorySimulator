@@ -5,6 +5,7 @@ import java.util.Map;
 
 import gametheorysimulator.game.Game;
 import gametheorysimulator.game.PGG;
+import gametheorysimulator.space.DynamicGameSpace;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.Grid2D;
 import gametheorysimulator.space.SharedMedium;
@@ -21,6 +22,7 @@ class SimulatorOptions {
 	private Map<String, Double> parameters = new HashMap<String, Double>();
 	private int iterations = 100;//100 per default
 	private GameSpace.Reach reach;
+	private DynamicGameSpace.Movement movement;
 	
 	public SimulatorOptions(String[] args) {
 		for(int i=0; i<args.length; i++)
@@ -68,12 +70,23 @@ class SimulatorOptions {
 					for(int j=0; j<parametersArray.length; j+=2)
 						parameters.put(parametersArray[j], Double.parseDouble(parametersArray[j+1]));
 					break;
+				case "-movement":
+					switch(args[i+1]) {
+						case "Random":
+							movement = DynamicGameSpace.Movement.RANDOM;
+							break;
+						default:
+							System.out.println("ERROR: "+args[i+1]+" is an invalid movement type!");
+					}
+					break;
 			}
 		setup();
 	}
 
 	private void setup() {
 		space.setReach(reach);
+		if(DynamicGameSpace.class.isInstance(space))
+			((DynamicGameSpace)space).setMovement(movement);
 		for(Map.Entry<String, Double> param: parameters.entrySet())
 			game.setParameter(param.getKey(), param.getValue());
 	}

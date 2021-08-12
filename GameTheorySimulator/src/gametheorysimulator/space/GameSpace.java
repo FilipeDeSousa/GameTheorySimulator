@@ -13,4 +13,5 @@ public interface GameSpace {
 	public List<Player> reachablePlayers(Player player);
 	public void setReach(Reach reach);
 	public Reach getReach();
+	public boolean hasMovement();
 }

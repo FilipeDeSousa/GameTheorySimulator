@@ -8,11 +8,12 @@ import gametheorysimulator.players.Player;
 import gametheorysimulator.space.position.Grid2DPosition;
 import gametheorysimulator.space.position.SpacePosition;
 
-public class Grid2D implements GameSpace {
+public class Grid2D implements DynamicGameSpace {
 	private int length, width;
 	private List<Player> population;
 	private Player[][] grid;
 	private Reach reach;
+	private Movement movement;
 	
 	//Constructor
 	public Grid2D(int length, int width) {
@@ -21,6 +22,7 @@ public class Grid2D implements GameSpace {
 		grid = new Player[length][width];
 	}
 
+	//Non-Static
 	@Override
 	public List<Player> populate(int n) {
 		Player.setSpace(this);
@@ -95,10 +97,63 @@ public class Grid2D implements GameSpace {
 		return reachablePlayers;
 	}
 
+	@Override
+	public boolean hasMovement() {
+		if(movement == Movement.RANDOM)
+			return true;
+		return false;
+	}
+
+	@Override
+	public void resetOccupation() {
+		//Reset to null
+		for(int i=0; i<grid.length; i++)
+			for(int j=0; j<grid[i].length; j++)
+				grid[i][j] = null;
+		
+		for(Player player: population) {
+			int[] coordenates = player.getPosition().getPosition();
+			grid[coordenates[0]][coordenates[1]]=player;
+		}
+	}
+	
+	@Override
+	public void resetOccupation(Player player, int[] oldCoordenates) {
+		grid[oldCoordenates[0]][oldCoordenates[1]] = null;
+		int[]coordenates = player.getPosition().getPosition();
+		grid[coordenates[0]][coordenates[1]] = player;
+	}
+	
 	//Getters
 	@Override
 	public Reach getReach() {
 		return reach;
+	}
+	
+	@Override
+	public List<SpacePosition> getPossibleMovePositions(SpacePosition initialPosition, int step) {
+		List<SpacePosition> moves = new ArrayList<SpacePosition>(); 
+		int[] coordenates = initialPosition.getPosition();
+		
+		for(int i=coordenates[0]-step; i<=coordenates[0]+step; i++) {
+			if(i<0)
+				continue;
+			if(i>length-1)
+				break;
+			for(int j=coordenates[1]-step; j<=coordenates[1]+step; j++) {
+				if(j<0)
+					continue;
+				if(i == coordenates[0] && j == coordenates[1])
+					continue;
+				if(j>width-1)
+					break;
+				Player player = grid[i][j];
+				if(player == null)
+					moves.add(new Grid2DPosition(i, j));
+			}
+		}
+		
+		return moves;
 	}
 	
 	//Setters
@@ -106,5 +161,8 @@ public class Grid2D implements GameSpace {
 	public void setReach(Reach reach) {
 		this.reach = reach;
 	}
-
+	
+	public void setMovement(Movement movement) {
+		this.movement = movement;
+	}
 }
