@@ -4,11 +4,11 @@ import java.util.List;
 
 import gametheorysimulator.players.Player;
 
-public class ForgivingTitForTat extends TitForTat {
+public class GenerousTitForTat extends TitForTat {
 	RandomBehaviour forgivingBehaviour;
 	
 	//Constructor
-	public ForgivingTitForTat(Player player) {
+	public GenerousTitForTat(Player player) {
 		super(player);
 		forgivingBehaviour = new RandomBehaviour();
 	}

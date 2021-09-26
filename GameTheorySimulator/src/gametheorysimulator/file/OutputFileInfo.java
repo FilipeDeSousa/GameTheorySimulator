@@ -37,7 +37,7 @@ public class OutputFileInfo extends OutputFile {
 	
 	private File file;
 	private Document document;
-	private int iteration = 1;
+	private int numberIteration = 1, numberRun = 1;
 	private String path;
 	
 	//Constructor
@@ -91,10 +91,11 @@ public class OutputFileInfo extends OutputFile {
 	//Non-Static
 	public void printIteration(List<Player> players) {
 		Node simulation = document.getFirstChild();
-		Element run = document.createElement("run");
-		run.setAttribute("iteration", iteration+"");iteration++;
+		Node run = simulation.getLastChild();
+		Element iteration = document.createElement("iteration");
+		iteration.setAttribute("iteration", numberIteration+"");numberIteration++;
 		int numberPlayers = players.size();
-		run.setAttribute("numberOfPlayers", numberPlayers+"");
+		iteration.setAttribute("numberOfPlayers", numberPlayers+"");
 		double totalPayoff = 0;
 		int numberAlone = 0, numberCooperators = 0, numberDefectors = 0;
 		for(Player player: players) {
@@ -127,14 +128,21 @@ public class OutputFileInfo extends OutputFile {
 			}
 			playerElement.appendChild(playerDecisionElement);
 			
-			run.appendChild(playerElement);
+			iteration.appendChild(playerElement);
 		}
-		run.setAttribute("totalPayoff", totalPayoff+"");
-		run.setAttribute("medianPayoff", (totalPayoff/numberPlayers) +"");
-		run.setAttribute("numberAlone", numberAlone +"");
-		run.setAttribute("numberCooperators", numberCooperators +"");
-		run.setAttribute("numberDefectors", numberDefectors +"");
-		run.setAttribute("cooperationRatio", ((double)numberCooperators)/((double)(numberCooperators + numberDefectors)) +"");
+		iteration.setAttribute("totalPayoff", totalPayoff+"");
+		iteration.setAttribute("medianPayoff", (totalPayoff/numberPlayers) +"");
+		iteration.setAttribute("numberAlone", numberAlone +"");
+		iteration.setAttribute("numberCooperators", numberCooperators +"");
+		iteration.setAttribute("numberDefectors", numberDefectors +"");
+		iteration.setAttribute("cooperationRatio", ((double)numberCooperators)/((double)(numberCooperators + numberDefectors)) +"");
+		run.appendChild(iteration);
+	}
+	
+	public void printRun() {
+		Node simulation = document.getFirstChild();
+		Element run = document.createElement("run");
+		run.setAttribute("run", numberRun+"");numberRun++;
 		simulation.appendChild(run);
 	}
 	
@@ -165,7 +173,7 @@ public class OutputFileInfo extends OutputFile {
 		}
 		
 		OutputFileGraphs graphs = OutputFileGraphs.newInstance(this);
-		graphs.printGraphs();
+		graphs.printGraphs(numberRun-1);
 		
 		outputFileInfo = null;
 	}
@@ -174,8 +182,9 @@ public class OutputFileInfo extends OutputFile {
 		return path;
 	}
 
-	public Map<Double, Double> getMapValues(String keyName, String valueName) {
-		NodeList iterations = document.getFirstChild().getChildNodes();
+	public Map<Double, Double> getMapValues(String keyName, String valueName, int run) {
+		NodeList runs = document.getFirstChild().getChildNodes();
+		NodeList iterations = runs.item(run).getChildNodes();
 		Map<Double, Double> result = new HashMap<Double, Double>();
 		for(int i=0; i<iterations.getLength(); i++) {
 			Node iteration = iterations.item(i);

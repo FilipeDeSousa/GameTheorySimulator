@@ -7,8 +7,10 @@ import gametheorysimulator.players.Player;
 import gametheorysimulator.space.SharedMedium;
 
 public class PGG implements Game {
+	//Non-static attributes
 	private double synergeticFactor = 1;
 	private double cost = 1;
+	private List<Player> population;
 
 	//Constructor
 	public PGG() {
@@ -78,6 +80,7 @@ public class PGG implements Game {
 		return result;
 	}
 
+	//Setters
 	@Override
 	public void setParameter(String parameter, Double value) {
 		switch(parameter) {
@@ -91,5 +94,17 @@ public class PGG implements Game {
 				System.out.println("ERROR: Parameter "+parameter+" doesn't exist in Game PGG");
 				System.exit(0);
 		}
+	}
+
+	@Override
+	public void setPopulation(List<Player> players) {
+		population = players;
+	}
+	
+	
+	//Getters
+	@Override
+	public List<Player> getPopulation() {
+		return population;
 	}
 }

@@ -1,6 +1,10 @@
 package gametheorysimulator.file;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import gametheorysimulator.file.graphs.OutputGraph;
@@ -13,7 +17,6 @@ public class OutputFileGraphs extends OutputFile {
 	private final String COOPERATION_RATIO_FILENAME = "CooperationRatio.png";
 	private final String MEDIAN_PAYOFF_FILENAME = "MedianPayoff.png";
 	
-	private File cooperationRatioFile, medianPayoffFile;
 	private String path;
 	private OutputFileInfo outputFileInfo;
 		
@@ -21,8 +24,6 @@ public class OutputFileGraphs extends OutputFile {
 	private OutputFileGraphs(OutputFileInfo outputFileInfo){
 		this.outputFileInfo = outputFileInfo;
 		path = outputFileInfo.getPath();
-		cooperationRatioFile = new File(ROOT_DIRECTORY+"/"+path+"/"+PREFIX_FILENAME+COOPERATION_RATIO_FILENAME);
-		medianPayoffFile = new File(ROOT_DIRECTORY+"/"+path+"/"+PREFIX_FILENAME+MEDIAN_PAYOFF_FILENAME);
 	}
 	
 	//Static
@@ -33,13 +34,26 @@ public class OutputFileGraphs extends OutputFile {
 	}
 	
 	//Non-Static
-	public void printGraphs() {
-		OutputGraph cooperationRatioGraph = new OutputGraph("Cooperation Ratio", "t", "Cooperation Ratio");
-		Map<Double, Double> values = outputFileInfo.getMapValues("iteration", "cooperationRatio");
-		cooperationRatioGraph.plotGraph(values, cooperationRatioFile);
-		
-		OutputGraph medianPayoffGraph = new OutputGraph("Median Payoff", "t", "Median Payoff");
-		values = outputFileInfo.getMapValues("iteration", "medianPayoff");
-		medianPayoffGraph.plotGraph(values, medianPayoffFile);
+	public void printGraphs(int runs) {
+		for(int i=0; i<runs; i++) {
+			String completePath = ROOT_DIRECTORY+"/"+path+"/"+(i+1)+"/";
+			Path completePath2 = Paths.get(completePath);
+			try {
+				Files.createDirectories(completePath2);
+				File cooperationRatioFile = new File(completePath+PREFIX_FILENAME+COOPERATION_RATIO_FILENAME);
+				File medianPayoffFile = new File(completePath+PREFIX_FILENAME+MEDIAN_PAYOFF_FILENAME);
+				
+				OutputGraph cooperationRatioGraph = new OutputGraph("Cooperation Ratio", "t", "Cooperation Ratio");
+				Map<Double, Double> values = outputFileInfo.getMapValues("iteration", "cooperationRatio", i);
+				cooperationRatioGraph.plotGraph(values, cooperationRatioFile);
+				
+				OutputGraph medianPayoffGraph = new OutputGraph("Median Payoff", "t", "Median Payoff");
+				values = outputFileInfo.getMapValues("iteration", "medianPayoff", i);
+				medianPayoffGraph.plotGraph(values, medianPayoffFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

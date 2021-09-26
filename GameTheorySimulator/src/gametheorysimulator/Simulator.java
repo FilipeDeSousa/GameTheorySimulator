@@ -19,25 +19,28 @@ public class Simulator {
 		//Initial setups
 		options = new SimulatorOptions(args);
 		space = options.getSpace();
-		players = space.populate(options.getNumberPlayers());
+		players = options.getPlayers();
 		setPlayersStrategies();
 		
 		//Run iterations
-		for(int i=0; i<options.getIterations(); i++) {
-			if(space.hasMovement())
+		for(int i=0; i<options.getRuns(); i++) {
+			out.printRun();
+			for(int j=0; j<options.getIterations(); j++) {
+				if(space.hasMovement())
+					for(Player player: players)
+						player.move();
 				for(Player player: players)
-					player.move();
-			for(Player player: players)
-				player.setReachablePlayers();
-			for(Player player: players)
-				player.decide();
-			for(Player player: players)
-				player.computePayoff();
-			System.out.println("Iteration "+(i+1)+" :");
-			if(DynamicGameSpace.class.isInstance(space) && Grid2D.class.isInstance(space))
-				((Grid2D) space).printGridOccupation();
-			//printInfo();
-			out.printIteration(players);
+					player.setReachablePlayers();
+				for(Player player: players)
+					player.decide();
+				for(Player player: players)
+					player.computePayoff();
+				System.out.println("Iteration "+(i+1)+" :");
+				if(DynamicGameSpace.class.isInstance(space) && Grid2D.class.isInstance(space))
+					((Grid2D) space).printGridOccupation();
+				//printInfo();
+				out.printIteration(players);
+			}
 		}
 		
 		//Last instructions

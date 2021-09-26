@@ -8,7 +8,7 @@ import gametheorysimulator.space.DynamicGameSpace;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.position.SpacePosition;
 import gametheorysimulator.strategy.AltruisticBehaviour;
-import gametheorysimulator.strategy.ForgivingTitForTat;
+import gametheorysimulator.strategy.GenerousTitForTat;
 import gametheorysimulator.strategy.GameStrategy;
 import gametheorysimulator.strategy.RandomBehaviour;
 import gametheorysimulator.strategy.RationalBehaviour;
@@ -114,6 +114,14 @@ public class Player {
 		return space;
 	}
 	
+	public Game getGame() {
+		return game;
+	}
+	
+	public GameStrategy getStrategy() {
+		return strategy;
+	}
+	
 	//Setters
 	public void setReachablePlayers() {
 		reachablePlayers = space.reachablePlayers(this);
@@ -131,7 +139,7 @@ public class Player {
 				this.strategy = new TitForTat(this);
 				return this.strategy;
 			case "ForgivingTitForTat":
-				this.strategy = new ForgivingTitForTat(this);
+				this.strategy = new GenerousTitForTat(this);
 				return this.strategy;
 			case "RationalBehaviour":
 				this.strategy = new RationalBehaviour(this);
@@ -141,5 +149,9 @@ public class Player {
 				System.exit(0);
 		}
 		return null;
+	}
+	
+	public void setStrategy(GameStrategy strategy) {
+		this.strategy = strategy;
 	}
 }

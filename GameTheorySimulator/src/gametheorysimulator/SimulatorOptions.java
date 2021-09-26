@@ -1,6 +1,7 @@
 package gametheorysimulator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import gametheorysimulator.game.Game;
@@ -9,21 +10,26 @@ import gametheorysimulator.space.DynamicGameSpace;
 import gametheorysimulator.space.GameSpace;
 import gametheorysimulator.space.Grid2D;
 import gametheorysimulator.space.SharedMedium;
+import gametheorysimulator.players.Player;
 
 class SimulatorOptions {
 	enum SpaceOptions {
 		GRID_2D
 	}
 	
+	//Non-static attributes
 	private int numberPlayers;
 	private GameSpace space;
 	private Game game;
 	private Map<String, Integer> strategies = new HashMap<String, Integer>();
 	private Map<String, Double> parameters = new HashMap<String, Double>();
 	private int iterations = 100;//100 per default
+	private int runs = 1;//1 per default
 	private GameSpace.Reach reach;
 	private DynamicGameSpace.Movement movement;
+	private List<Player> players;
 	
+	//Non-static methods
 	public SimulatorOptions(String[] args) {
 		for(int i=0; i<args.length; i++)
 			switch(args[i]) {
@@ -60,6 +66,9 @@ class SimulatorOptions {
 				case "-iterations":
 					iterations = Integer.parseInt(args[i+1]);
 					break;
+				case "-runs":
+					runs = Integer.parseInt(args[i+1]);
+					break;
 				case "-strategies":
 					String[] strategiesArray = args[i+1].split(";");
 					for(int j=0; j<strategiesArray.length; j+=2)
@@ -89,8 +98,15 @@ class SimulatorOptions {
 			((DynamicGameSpace)space).setMovement(movement);
 		for(Map.Entry<String, Double> param: parameters.entrySet())
 			game.setParameter(param.getKey(), param.getValue());
+		players = space.populate(numberPlayers);
+		game.setPopulation(players);
 	}
 
+	//Getters
+	public Map<String, Integer> getStrategies() {
+		return strategies;
+	}
+	
 	public GameSpace getSpace() {
 		if(space == null){
 			System.out.println("ERROR: Space is not set!");
@@ -107,13 +123,17 @@ class SimulatorOptions {
 	public int getIterations() {
 		return iterations;
 	}
+	
+	public int getRuns() {
+		return runs;
+	}
 
 	public Game getGame() {
 		return game;
 	}
 
-	public Map<String, Integer> getStrategies() {
-		return strategies;
+	public List<Player> getPlayers(){
+		return players;
 	}
 
 }
