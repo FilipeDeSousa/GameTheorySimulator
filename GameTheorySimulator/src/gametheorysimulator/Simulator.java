@@ -35,7 +35,7 @@ public class Simulator {
 					player.decide();
 				for(Player player: players)
 					player.computePayoff();
-				System.out.println("Iteration "+(i+1)+" :");
+				System.out.println("Iteration "+(j+1)+" :");
 				if(DynamicGameSpace.class.isInstance(space) && Grid2D.class.isInstance(space))
 					((Grid2D) space).printGridOccupation();
 				//printInfo();

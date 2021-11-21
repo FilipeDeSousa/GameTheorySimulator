@@ -131,7 +131,7 @@ public class OutputFileInfo extends OutputFile {
 			iteration.appendChild(playerElement);
 		}
 		iteration.setAttribute("totalPayoff", totalPayoff+"");
-		iteration.setAttribute("medianPayoff", (totalPayoff/numberPlayers) +"");
+		iteration.setAttribute("averagePayoff", (totalPayoff/numberPlayers) +"");
 		iteration.setAttribute("numberAlone", numberAlone +"");
 		iteration.setAttribute("numberCooperators", numberCooperators +"");
 		iteration.setAttribute("numberDefectors", numberDefectors +"");

@@ -70,12 +70,12 @@ class SimulatorOptions {
 					runs = Integer.parseInt(args[i+1]);
 					break;
 				case "-strategies":
-					String[] strategiesArray = args[i+1].split(";");
+					String[] strategiesArray = args[i+1].split(",");
 					for(int j=0; j<strategiesArray.length; j+=2)
 						strategies.put(strategiesArray[j], Integer.parseInt(strategiesArray[j+1]));
 					break;
 				case "-parameters":
-					String[] parametersArray = args[i+1].split(";");
+					String[] parametersArray = args[i+1].split(",");
 					for(int j=0; j<parametersArray.length; j+=2)
 						parameters.put(parametersArray[j], Double.parseDouble(parametersArray[j+1]));
 					break;

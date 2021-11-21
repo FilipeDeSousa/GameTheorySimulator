@@ -15,7 +15,7 @@ public class OutputFileGraphs extends OutputFile {
 	
 	private final String PREFIX_FILENAME = "GraphOut";
 	private final String COOPERATION_RATIO_FILENAME = "CooperationRatio.png";
-	private final String MEDIAN_PAYOFF_FILENAME = "MedianPayoff.png";
+	private final String AVERAGE_PAYOFF_FILENAME = "AveragePayoff.png";
 	
 	private String path;
 	private OutputFileInfo outputFileInfo;
@@ -41,14 +41,14 @@ public class OutputFileGraphs extends OutputFile {
 			try {
 				Files.createDirectories(completePath2);
 				File cooperationRatioFile = new File(completePath+PREFIX_FILENAME+COOPERATION_RATIO_FILENAME);
-				File medianPayoffFile = new File(completePath+PREFIX_FILENAME+MEDIAN_PAYOFF_FILENAME);
+				File medianPayoffFile = new File(completePath+PREFIX_FILENAME+AVERAGE_PAYOFF_FILENAME);
 				
 				OutputGraph cooperationRatioGraph = new OutputGraph("Cooperation Ratio", "t", "Cooperation Ratio");
 				Map<Double, Double> values = outputFileInfo.getMapValues("iteration", "cooperationRatio", i);
 				cooperationRatioGraph.plotGraph(values, cooperationRatioFile);
 				
-				OutputGraph medianPayoffGraph = new OutputGraph("Median Payoff", "t", "Median Payoff");
-				values = outputFileInfo.getMapValues("iteration", "medianPayoff", i);
+				OutputGraph medianPayoffGraph = new OutputGraph("Average Payoff", "t", "Average Payoff");
+				values = outputFileInfo.getMapValues("iteration", "averagePayoff", i);
 				medianPayoffGraph.plotGraph(values, medianPayoffFile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
